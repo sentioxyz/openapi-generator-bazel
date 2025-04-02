@@ -10,7 +10,7 @@ jobs:
     steps:
       # Caches and restores the bazelisk download directory.
       - name: Cache bazelisk download
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           cache-name: bazel-cache
         with:
@@ -26,5 +26,16 @@ jobs:
       # Build
       - name: Build all target
         run: |
-          cd internal/test
+          cd internal/test/basic
+          bazel build //...
+
+      - name: Integration BCR test
+        run: |
+          cd internal/test/bcr
+          bazel mod path
+          bazel build //...
+
+      - name: Integration BCR with older version
+        run: |
+          cd internal/test/bcr-custom-version
           bazel build //...
